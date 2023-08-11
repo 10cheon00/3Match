@@ -5,10 +5,10 @@ using UnityEngine;
 public class TileBoardFactory : MonoBehaviour
 {
     [SerializeField]
+    private GameObject _tileBoardObject;
+    [SerializeField]
     private List<GameObject> _tilePrefabList;
 
-    [SerializeField]
-    private GameObject _tileBoardObject;
     private float _width;
     private float _height;
 
@@ -19,7 +19,7 @@ public class TileBoardFactory : MonoBehaviour
         _height = tileSpriteRenderer.bounds.size.y;
     }
 
-    public TileBoard CreateTileBoard(int xSize, int ySize)
+    public TileBoard CreateTileBoard(int xSize, int ySize, TileSwapHandler _tileSwapHandler)
     {
         // todo
         // improve calculation of initial spawn point.
@@ -41,7 +41,9 @@ public class TileBoardFactory : MonoBehaviour
                 tileObject.transform.localPosition =
                     tilePos + new Vector3(_width * j, _height * i, 0);
 
-                tileList.Add(tileObject.GetComponent<Tile>());
+                Tile tile = tileObject.GetComponent<Tile>();
+                tile.Initialize(_tileSwapHandler);
+                tileList.Add(tile);
             }
 
             tileBoard.Add(tileList);

@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     private TileBoardFactory _tileBoardFactory;
     [SerializeField]
     private TileBoardManager _tileBoardManager;
+    [SerializeField]
+    private TileSwapHandler _tileSwapHandler;
 
     [SerializeField]
     private int xSize = 5;
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize);
+        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize, _tileSwapHandler);
         _tileBoardManager.Initialize(tileBoard);
     }
 

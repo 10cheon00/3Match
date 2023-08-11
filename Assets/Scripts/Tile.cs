@@ -11,8 +11,6 @@ Tile의 역할
 
 public class Tile : MonoBehaviour
 {
-    private SpriteRenderer _spriteRenderer;
-
     [SerializeField]
     private TileColor _tileColor;
     public TileColor Color
@@ -21,8 +19,15 @@ public class Tile : MonoBehaviour
         set { _tileColor = value; }
     }
 
-    void Start()
+    private TileSwapHandler _tileSwapHandler;
+
+    private void OnMouseDown()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _tileSwapHandler.SelectTile(this);
+    }
+
+    public void Initialize(TileSwapHandler tileSwapHandler)
+    {
+        _tileSwapHandler = tileSwapHandler;
     }
 }

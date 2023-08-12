@@ -20,6 +20,7 @@ public class Tile : MonoBehaviour
         set { _tileColor = value; }
     }
 
+    private TileBoardManager _tileBoardManager;
     private Vector3 _rotationPoint;
     private bool _canRotate = false;
     private float _rotatedAngle = 0f;
@@ -28,6 +29,11 @@ public class Tile : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void Initialize(TileBoardManager tileBoardManager)
+    {
+        _tileBoardManager = tileBoardManager;
     }
 
     private void FixedUpdate()
@@ -42,15 +48,16 @@ public class Tile : MonoBehaviour
             }
         }
     }
+
     private void Rotate()
     {
         transform.RotateAround(_rotationPoint, Vector3.forward, _angle);
         _rotatedAngle += _angle;
 
-        ResetLocalRotation();
+        ResetRotation();
     }
 
-    private void ResetLocalRotation()
+    private void ResetRotation()
     {
         Quaternion quaternion = transform.rotation;
         quaternion.eulerAngles = Vector3.zero;
@@ -61,6 +68,7 @@ public class Tile : MonoBehaviour
     {
         _canRotate = false;
         _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.Default;
+        _tileBoardManager.Resolve3Match();
     }
 
     public void Start180DegreeRotation(Vector3 rotationPoint)
@@ -70,5 +78,4 @@ public class Tile : MonoBehaviour
         _canRotate = true;
         _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.SwappingTile;
     }
-
 }

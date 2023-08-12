@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize);
+        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize, _tileBoardManager);
         _tileBoardManager.Initialize(tileBoard);
     }
 

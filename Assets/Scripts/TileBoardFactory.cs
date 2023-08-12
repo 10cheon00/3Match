@@ -19,7 +19,7 @@ public class TileBoardFactory : MonoBehaviour
         _height = tileSpriteRenderer.bounds.size.y;
     }
 
-    public TileBoard CreateTileBoard(int xSize, int ySize, TileSwapHandler _tileSwapHandler)
+    public TileBoard CreateTileBoard(int xSize, int ySize)
     {
         // todo
         // improve calculation of initial spawn point.
@@ -42,7 +42,6 @@ public class TileBoardFactory : MonoBehaviour
                     tilePos + new Vector3(_width * j, _height * i, 0);
 
                 Tile tile = tileObject.GetComponent<Tile>();
-                tile.Initialize(_tileSwapHandler);
                 tileList.Add(tile);
             }
 

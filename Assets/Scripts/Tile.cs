@@ -18,16 +18,4 @@ public class Tile : MonoBehaviour
         get { return _tileColor; }
         set { _tileColor = value; }
     }
-
-    private TileSwapHandler _tileSwapHandler;
-
-    private void OnMouseDown()
-    {
-        _tileSwapHandler.SelectTile(this);
-    }
-
-    public void Initialize(TileSwapHandler tileSwapHandler)
-    {
-        _tileSwapHandler = tileSwapHandler;
-    }
 }

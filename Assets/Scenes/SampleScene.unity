@@ -154,7 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileBoardFactory: {fileID: 560743363}
   _tileBoardManager: {fileID: 178675405}
-  _tileSwapHandler: {fileID: 2063084582}
   xSize: 5
 --- !u!4 &62109090
 Transform:
@@ -423,8 +422,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2063084583}
-  - component: {fileID: 2063084582}
   - component: {fileID: 2063084581}
+  - component: {fileID: 2063084582}
   m_Layer: 0
   m_Name: TileSwapHandler
   m_TagString: Untagged

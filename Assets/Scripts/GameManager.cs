@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
     private TileBoardFactory _tileBoardFactory;
 
     [SerializeField]
+    private int xSize = 5;
+    [SerializeField]
+    private int ySize = 5;
+
+    [SerializeField]
     private TileBoardManager _tileBoardManager;
     public TileBoardManager TileBoardManager
     {
@@ -41,19 +46,15 @@ public class GameManager : MonoBehaviour
         get { return _tileSwapHandler; }
     }
 
-    [SerializeField]
-    private int xSize = 5;
-    private int ySize = 5;
-
     private GameManagerState _gameManagerState;
 
     private void Start()
     {
-        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize, _tileBoardManager);
+        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize);
         _tileBoardManager.Initialize(tileBoard);
 
+        GameManagerState.SetGameManager(this);
         ChangeState(new GameManagerIdleState());
-        _gameManagerState.SetGameManager(this);
     }
 
     void Update()

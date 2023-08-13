@@ -20,7 +20,7 @@ public abstract class GameManagerState
         _gameManager.ChangeState(gameManagerState);
     }
 
-    public void SetGameManager(GameManager gameManager)
+    public static void SetGameManager(GameManager gameManager)
     {
         _gameManager = gameManager;
     }

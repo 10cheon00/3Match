@@ -20,21 +20,15 @@ public class Tile : MonoBehaviour
         set { _tileColor = value; }
     }
 
-    private TileBoardManager _tileBoardManager;
-    private Vector3 _rotationPoint;
     private bool _canRotate = false;
     public bool IsSwappingEffectFinished { get { return _canRotate == false; } }
+    private Vector3 _rotationPoint;
     private float _rotatedAngle = 0f;
     private readonly float _angle = 15f;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    public void Initialize(TileBoardManager tileBoardManager)
-    {
-        _tileBoardManager = tileBoardManager;
     }
 
     private void FixedUpdate()
@@ -77,6 +71,5 @@ public class Tile : MonoBehaviour
     {
         _canRotate = false;
         _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.Default;
-        _tileBoardManager.Resolve3Match();
     }
 }

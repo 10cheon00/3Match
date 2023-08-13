@@ -27,11 +27,16 @@ public class TileSwapHandler : MonoBehaviour
             {
                 SelectTile();
             }
+            else
+            {
+                Reset();
+            }
         }
     }
 
     private void RaycastToTileBoard()
     {
+        _selectedTile = null;
         Vector2 mousePositionOnScreen = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D raycastHit2D = Physics2D.Raycast(mousePositionOnScreen, Vector2.zero);
 
@@ -53,11 +58,13 @@ public class TileSwapHandler : MonoBehaviour
     private void SelectTile()
     {
         /*
-        if source is null:
-            selectedTile is source
+        if tileA is null:
+            tileA = selectedTile
         else:
-            selectedTile is destination
-            clear
+            if tileA != selectedTile:
+                tileB = selectedTile
+            else:
+                reset
         */
 
         if (_tiles.Item1 is null)
@@ -72,6 +79,10 @@ public class TileSwapHandler : MonoBehaviour
             {
                 _tiles.Item2 = _selectedTile;
             }
+            else
+            {
+                Reset();
+            }
         }
     }
 
@@ -83,8 +94,7 @@ public class TileSwapHandler : MonoBehaviour
     public void Reset()
     {
         _spriteRenderer.enabled = false;
-        _tiles = new();
-        _selectedTile = null;
+        _tiles.Item1 = _tiles.Item2 = _selectedTile = null;
     }
 
     public bool IsPlayerSelectedTwoTiles()

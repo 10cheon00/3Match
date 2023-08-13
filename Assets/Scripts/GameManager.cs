@@ -22,16 +22,24 @@ while true:
             else:
                 break
 */
-public class GameManager : MonoBehaviour //SingletonMonoBehaviour<GameManager>
+public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private TileBoardFactory _tileBoardFactory;
 
     [SerializeField]
     private TileBoardManager _tileBoardManager;
+    public TileBoardManager TileBoardManager
+    {
+        get { return _tileBoardManager; }
+    }
 
     [SerializeField]
     private TileSwapHandler _tileSwapHandler;
+    public TileSwapHandler TileSwapHandler
+    {
+        get { return _tileSwapHandler; }
+    }
 
     [SerializeField]
     private int xSize = 5;
@@ -39,13 +47,12 @@ public class GameManager : MonoBehaviour //SingletonMonoBehaviour<GameManager>
 
     private GameManagerState _gameManagerState;
 
-    // public override void InitializeSingletonOnAwake()
     private void Start()
     {
         TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize, _tileBoardManager);
         _tileBoardManager.Initialize(tileBoard);
 
-        ChangeState(new GameManagerIdleState(_tileSwapHandler));
+        ChangeState(new GameManagerIdleState());
         _gameManagerState.SetGameManager(this);
     }
 
@@ -58,24 +65,4 @@ public class GameManager : MonoBehaviour //SingletonMonoBehaviour<GameManager>
     {
         _gameManagerState = state;
     }
-
-    public void SwapTwoTiles(TilePair tiles)
-    {
-        // swap two tile in tileboard.
-        // play swapping tile effect.
-        _tileBoardManager.SwapTwoTiles(tiles);
-        Tile tileA = tiles.Item1;
-        Tile tileB = tiles.Item2;
-
-        Vector3 midPoint = Vector3.Lerp(tileA.transform.position, tileB.transform.position, 0.5f);
-        tileA.Start180DegreeRotation(midPoint);
-        tileB.Start180DegreeRotation(midPoint);
-    }
-
-    public void SwapTwoTilesCallback()
-    {
-        ChangeState(new GameManagerResolve3MatchState());
-    }
-
-    public void Resolve3Match() { }
 }

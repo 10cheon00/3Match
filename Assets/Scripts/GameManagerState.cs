@@ -28,38 +28,50 @@ public abstract class GameManagerState
 
 public class GameManagerIdleState : GameManagerState
 {
-    private TileSwapHandler _tileSwapHandler;
-
-    public GameManagerIdleState(TileSwapHandler tileSwapHandler)
-    {
-        _tileSwapHandler = tileSwapHandler;
-    }
-
     public override void Handle()
     {
         // in idle state, just wait until player select tiles
         // when player selected, change state to SwappingState.
-
-        if (_tileSwapHandler.IsPlayerSelectedTwoTiles())
+        TileSwapHandler tileSwapHandler = GameManager.TileSwapHandler;
+        if (tileSwapHandler.IsPlayerSelectedTwoTiles())
         {
-            TilePair tiles = _tileSwapHandler.GetSelectedTiles();
-            _tileSwapHandler.Reset();
 
-            ChangeState(new GameManagerSwappingState(tiles));
+            TilePair tiles = tileSwapHandler.GetSelectedTiles();
+            tileSwapHandler.Reset();
+
+            ChangeState(new GameManagerSwapTwoTilesState(tiles));
         }
     }
 }
 
-public class GameManagerSwappingState : GameManagerState
+public class GameManagerSwapTwoTilesState : GameManagerState
 {
     private TilePair _tiles;
     private bool _isSwappingFinished;
 
-    public GameManagerSwappingState(TilePair tiles)
+    public GameManagerSwapTwoTilesState(TilePair tiles)
     {
         _tiles = tiles;
         _isSwappingFinished = false;
-        GameManager.SwapTwoTiles(_tiles);
+
+        // swap two tile in tileboard.
+        // play swapping tile effect.
+        SwapTwoTilesAndPlayEffect();
+    }
+
+    private void SwapTwoTilesAndPlayEffect()
+    {
+        TileBoardManager tileBoardManager = GameManager.TileBoardManager;
+
+        tileBoardManager.SwapTwoTiles(_tiles);
+
+        Vector3 midPoint = Vector3.Lerp(
+            _tiles.Item1.transform.position,
+            _tiles.Item2.transform.position,
+            0.5f
+        );
+        _tiles.Item1.Start180DegreeRotation(midPoint);
+        _tiles.Item2.Start180DegreeRotation(midPoint);
     }
 
     public override void Handle()
@@ -68,7 +80,7 @@ public class GameManagerSwappingState : GameManagerState
         // after end of swapping effect, change state to Resolve3Match.
 
         UpdateState();
-        if (_isSwappingFinished) 
+        if (_isSwappingFinished)
         {
             ChangeState(new GameManagerResolve3MatchState());
         }
@@ -76,7 +88,8 @@ public class GameManagerSwappingState : GameManagerState
 
     private void UpdateState()
     {
-        _isSwappingFinished = _tiles.Item1.IsSwappingEffectFinished && _tiles.Item2.IsSwappingEffectFinished;
+        _isSwappingFinished =
+            _tiles.Item1.IsSwappingEffectFinished && _tiles.Item2.IsSwappingEffectFinished;
     }
 }
 
@@ -84,9 +97,10 @@ public class GameManagerResolve3MatchState : GameManagerState
 {
     public override void Handle()
     {
-        GameManager.Resolve3Match();
         // in resolve 3match state, find all 3 match tiles and pop them.
         // and insert new tiles into tileboard.
         // after that, change state to IdleState
+
+        GameManager.ChangeState(new GameManagerIdleState());
     }
 }

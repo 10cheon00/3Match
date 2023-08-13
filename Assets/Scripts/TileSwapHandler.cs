@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+using TilePair = System.ValueTuple<Tile, Tile>;
+
 public class TileSwapHandler : MonoBehaviour
 {
     private Tile _selectedTile;
-    private Tile _source;
-    private Tile _destination;
+    private TilePair _tiles;
 
-    [SerializeField]
-    private TileBoardManager _tileBoardManager;
     private SpriteRenderer _spriteRenderer;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        Hide();
+        Reset();
     }
 
     private void Update()
@@ -58,26 +57,21 @@ public class TileSwapHandler : MonoBehaviour
             selectedTile is source
         else:
             selectedTile is destination
-            swap source and destination
             clear
         */
 
-        if (_source is null)
+        if (_tiles.Item1 is null)
         {
-            _source = _selectedTile;
-            transform.position = _source.transform.position;
+            _tiles.Item1 = _selectedTile;
+            transform.position = _tiles.Item1.transform.position;
             Show();
         }
         else
         {
-            _destination = _selectedTile;
-            if (_source != _destination)
+            if (_tiles.Item1 != _selectedTile)
             {
-                _tileBoardManager.SwapTile(_source, _destination);
+                _tiles.Item2 = _selectedTile;
             }
-
-            Hide();
-            Reset();
         }
     }
 
@@ -86,13 +80,20 @@ public class TileSwapHandler : MonoBehaviour
         _spriteRenderer.enabled = true;
     }
 
-    private void Hide()
+    public void Reset()
     {
         _spriteRenderer.enabled = false;
+        _tiles = new();
+        _selectedTile = null;
     }
 
-    private void Reset()
+    public bool IsPlayerSelectedTwoTiles()
     {
-        _source = _destination = _selectedTile = null;
+        return _tiles.Item1 != null && _tiles.Item2 != null;
+    }
+
+    public TilePair GetSelectedTiles()
+    {
+        return _tiles;
     }
 }

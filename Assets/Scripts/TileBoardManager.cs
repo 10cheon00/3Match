@@ -3,17 +3,12 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 
+using TilePair = System.ValueTuple<Tile, Tile>;
+
 /*
 Board의 역할
 1. 게임에 사용될 자료구조를 관리한다.
 */
-
-enum TileBoardManagerState
-{
-    Idle,
-    Swapping,
-    Resolving3Match
-}
 
 class MatchedTiles : List<Tile>
 {
@@ -25,6 +20,7 @@ class MatchedTiles : List<Tile>
 
 public class TileBoardManager : MonoBehaviour
 {
+    private TilePair _tilePair;
     private TileBoard _tileBoard;
 
     private List<MatchedTiles> _matchedTilesList;
@@ -38,17 +34,19 @@ public class TileBoardManager : MonoBehaviour
         Resolve3Match();
     }
 
-    public void SwapTile(Tile src, Tile dest)
+    public void SwapTwoTiles(TilePair tilePair)
     {
-        (int srcX, int srcY) = GetTileIndexes(src);
-        (int destX, int destY) = GetTileIndexes(dest);
+        _tilePair = tilePair;
+
+        (int srcX, int srcY) = GetTileIndexes(_tilePair.Item1);
+        (int destX, int destY) = GetTileIndexes(_tilePair.Item2);
 
         Debug.Assert(srcX != -1 && srcY != -1 && destX != -1 && destY != -1);
 
         if (AreTwoTilesAdjacent(srcX, srcY, destX, destY))
         {
             SwapTileInTileBoard(srcX, srcY, destX, destY);
-            PlayTileSwapEffect(src, dest);
+            // PlayTileSwapEffect(src, dest);
         }
     }
 
@@ -162,7 +160,6 @@ public class TileBoardManager : MonoBehaviour
     }
 
     private bool IsNotDuplicatedMatchedTiles()
-
     // TODO
     // 두 matchedTiles가 같은 원소를 포함하고 있는지 확인하려면 별도의 정보가 필요하다.
     // 단순히 원소 비교만 해서는 불가능하다.

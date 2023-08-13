@@ -23,6 +23,7 @@ public class Tile : MonoBehaviour
     private TileBoardManager _tileBoardManager;
     private Vector3 _rotationPoint;
     private bool _canRotate = false;
+    public bool IsSwappingEffectFinished { get { return _canRotate == false; } }
     private float _rotatedAngle = 0f;
     private readonly float _angle = 15f;
 
@@ -64,18 +65,18 @@ public class Tile : MonoBehaviour
         transform.rotation = quaternion;
     }
 
-    private void End180DegreeRotation()
-    {
-        _canRotate = false;
-        _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.Default;
-        _tileBoardManager.Resolve3Match();
-    }
-
     public void Start180DegreeRotation(Vector3 rotationPoint)
     {
         _rotationPoint = rotationPoint;
         _rotatedAngle = 0;
         _canRotate = true;
         _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.SwappingTile;
+    }
+
+    private void End180DegreeRotation()
+    {
+        _canRotate = false;
+        _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.Default;
+        _tileBoardManager.Resolve3Match();
     }
 }

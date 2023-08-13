@@ -10,7 +10,7 @@ Board의 역할
 1. 게임에 사용될 자료구조를 관리한다.
 */
 
-class MatchedTiles : List<Tile>
+public class MatchedTiles : List<Tile>
 {
     public MatchedTiles() { }
 
@@ -18,12 +18,14 @@ class MatchedTiles : List<Tile>
     public MatchedTiles(MatchedTiles otherMatchedTiles) : base(otherMatchedTiles) { }
 }
 
+public class MatchedTilesList : List<MatchedTiles> { }
+
 public class TileBoardManager : MonoBehaviour
 {
     private TilePair _tilePair;
     private TileBoard _tileBoard;
 
-    private List<MatchedTiles> _matchedTilesList;
+    private MatchedTilesList _matchedTilesList;
     private MatchedTiles _matchedTiles;
 
     public void Initialize(TileBoard tileBoard)
@@ -31,7 +33,6 @@ public class TileBoardManager : MonoBehaviour
         _tileBoard = tileBoard;
         _matchedTilesList = new();
         _matchedTiles = new();
-        Resolve3Match();
     }
 
     public void SwapTwoTiles(TilePair tilePair)
@@ -80,14 +81,7 @@ public class TileBoardManager : MonoBehaviour
         );
     }
 
-    private void PlayTileSwapEffect(Tile src, Tile dest)
-    {
-        Vector3 midPoint = Vector3.Lerp(src.transform.position, dest.transform.position, 0.5f);
-        src.Start180DegreeRotation(midPoint);
-        dest.Start180DegreeRotation(midPoint);
-    }
-
-    public void Resolve3Match()
+    public void FindAll3MatchTiles()
     {
         _matchedTilesList.Clear();
 
@@ -99,14 +93,14 @@ public class TileBoardManager : MonoBehaviour
             }
         }
 
-        if (Is3MatchExist())
-        {
-            PopAll3Match();
-        }
-        else
-        {
-            ResetTileBoard();
-        }
+        // if (Is3MatchExist())
+        // {
+        //     PopAll3Match();
+        // }
+        // else
+        // {
+        //     ResetTileBoard();
+        // }
     }
 
     private void Find3MatchFromTile(int x, int y)
@@ -187,12 +181,7 @@ public class TileBoardManager : MonoBehaviour
         return true;
     }
 
-    private bool Is3MatchExist()
-    {
-        return _matchedTilesList.Count > 0;
-    }
-
-    private void PopAll3Match()
+    public void PopAllMatchedTiles()
     {
         foreach (MatchedTiles matchedTiles in _matchedTilesList)
         {
@@ -207,5 +196,10 @@ public class TileBoardManager : MonoBehaviour
         }
     }
 
-    private void ResetTileBoard() { }
+    public MatchedTilesList GetMatchedTilesList()
+    {
+        return _matchedTilesList;
+    }
+
+    public void ResetTileBoard() { }
 }

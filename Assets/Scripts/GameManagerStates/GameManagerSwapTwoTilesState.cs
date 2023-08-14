@@ -7,12 +7,10 @@ namespace Assets.Scripts.GameManagerStates
     public class GameManagerSwapTwoTilesState : GameManagerState
     {
         private TilePair _tiles;
-        private bool _isSwappingEffectFinished;
 
         public GameManagerSwapTwoTilesState(TilePair tiles)
         {
             _tiles = tiles;
-            _isSwappingEffectFinished = false;
 
             // swap two tile in tileboard.
             // play swapping tile effect.
@@ -28,8 +26,8 @@ namespace Assets.Scripts.GameManagerStates
                 _tiles.tileB.transform.position,
                 0.5f
             );
-            _tiles.tileA.Start180DegreeRotation(midPoint);
-            _tiles.tileB.Start180DegreeRotation(midPoint);
+            _tiles.tileA.PlayRotationEffect(midPoint);
+            _tiles.tileB.PlayRotationEffect(midPoint);
         }
 
         public override void Handle()
@@ -37,17 +35,15 @@ namespace Assets.Scripts.GameManagerStates
             // in swapping state, swap two tiles and play swapping effect.
             // after end of swapping effect, change state to Resolve3Match.
 
-            UpdateState();
-            if (_isSwappingEffectFinished)
+            if (IsSwappingEffectFinished())
             {
                 ChangeState(new GameManagerResolve3MatchState());
             }
         }
 
-        private void UpdateState()
+        private bool IsSwappingEffectFinished()
         {
-            _isSwappingEffectFinished =
-                _tiles.tileA.IsSwappingEffectFinished && _tiles.tileB.IsSwappingEffectFinished;
+            return _tiles.tileA.IsReadyToPlayTileEffect() && _tiles.tileB.IsReadyToPlayTileEffect();
         }
     }
 }

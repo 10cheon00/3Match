@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+using Assets.Scripts.TileEffects;
+
 /*
 Tile의 역할
 1. 생성된 타일의 색을 관리한다.
@@ -11,6 +13,10 @@ Tile의 역할
 public class Tile : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
+    public SpriteRenderer SpriteRenderer
+    {
+        get { return _spriteRenderer; }
+    }
 
     [SerializeField]
     private TileColor _tileColor;
@@ -20,56 +26,52 @@ public class Tile : MonoBehaviour
         set { _tileColor = value; }
     }
 
-    private bool _canRotate = false;
-    public bool IsSwappingEffectFinished { get { return _canRotate == false; } }
-    private Vector3 _rotationPoint;
-    private float _rotatedAngle = 0f;
-    private readonly float _angle = 15f;
+    private TileEffect _effect;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _effect = new TileEffectReadyState(this);
     }
 
     private void FixedUpdate()
     {
-        if (_canRotate)
+        if (_effect.ShouldExecuteInFixedUpdate)
         {
-            Rotate();
-
-            if (_rotatedAngle >= 180f)
-            {
-                End180DegreeRotation();
-            }
+            _effect.Play();
         }
     }
 
-    private void Rotate()
+    private void Update()
     {
-        transform.RotateAround(_rotationPoint, Vector3.forward, _angle);
-        _rotatedAngle += _angle;
-
-        ResetRotation();
+        if (_effect.ShouldExecuteInFixedUpdate == false)
+        {
+            _effect.Play();
+        }
     }
 
-    private void ResetRotation()
+    public void PlayRotationEffect(Vector3 rotationPoint)
     {
-        Quaternion quaternion = transform.rotation;
-        quaternion.eulerAngles = Vector3.zero;
-        transform.rotation = quaternion;
+        ChangeEffect(new TileRotationEffect(this, rotationPoint));
     }
 
-    public void Start180DegreeRotation(Vector3 rotationPoint)
-    {
-        _rotationPoint = rotationPoint;
-        _rotatedAngle = 0;
-        _canRotate = true;
-        _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.SwappingTile;
+    public void PlayPopEffect() 
+    { 
+        ChangeEffect(new TilePopEffect(this));
     }
 
-    private void End180DegreeRotation()
+    public void ChangeEffect(TileEffect effect)
     {
-        _canRotate = false;
-        _spriteRenderer.sortingOrder = (int)TileBoardSortingOrder.Default;
+        _effect = effect;
+    }
+
+    public bool IsReadyToPlayTileEffect()
+    {
+        return _effect is TileEffectReadyState;
+    }
+
+    public void SetSpriteSortingOrder(int order)
+    {
+        _spriteRenderer.sortingOrder = order;
     }
 }

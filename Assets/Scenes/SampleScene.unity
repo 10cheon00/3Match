@@ -153,9 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileBoardFactory: {fileID: 560743363}
+  xSize: 5
+  ySize: 5
   _tileBoardManager: {fileID: 178675405}
   _tileSwapHandler: {fileID: 2063084582}
-  xSize: 5
 --- !u!4 &62109090
 Transform:
   m_ObjectHideFlags: 0

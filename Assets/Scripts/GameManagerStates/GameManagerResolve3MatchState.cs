@@ -22,22 +22,30 @@ namespace Assets.Scripts.GameManagerStates
 
             FindAllMatchedTiles();
             PopAllMatchedTilesAndPlayEffect();
-            InsertNewTiles();
+            InsertNewTilesAndPlayEffect();
 
-            GameManager.ChangeState(new GameManagerIdleState());
+            // GameManager.ChangeState(new GameManagerIdleState());
         }
 
         private void FindAllMatchedTiles()
         {
             _tileBoardManager.FindAll3MatchTiles();
-            _matchedTilesList = _tileBoardManager.GetMatchedTilesList();
         }
 
         private void PopAllMatchedTilesAndPlayEffect()
         {
+            _matchedTilesList = _tileBoardManager.GetMatchedTilesList();
+            foreach(MatchedTiles matchedTiles in _matchedTilesList)
+            {
+                foreach(Tile tile in matchedTiles)
+                {
+                    tile.PlayPopEffect();
+                }
+            }
             _tileBoardManager.PopAllMatchedTiles();
+
         }
 
-        private void InsertNewTiles() { }
+        private void InsertNewTilesAndPlayEffect() { }
     }
 }

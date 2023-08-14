@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-
-using TilePair = System.ValueTuple<Tile, Tile>;
 
 public class TileSwapHandler : MonoBehaviour
 {
@@ -67,17 +62,17 @@ public class TileSwapHandler : MonoBehaviour
                 reset
         */
 
-        if (_tiles.Item1 is null)
+        if (_tiles.tileA is null)
         {
-            _tiles.Item1 = _selectedTile;
-            transform.position = _tiles.Item1.transform.position;
+            _tiles.tileA = _selectedTile;
+            transform.position = _tiles.tileA.transform.position;
             Show();
         }
         else
         {
-            if (_tiles.Item1 != _selectedTile)
+            if (_tiles.tileA != _selectedTile)
             {
-                _tiles.Item2 = _selectedTile;
+                _tiles.tileB = _selectedTile;
             }
             else
             {
@@ -94,12 +89,12 @@ public class TileSwapHandler : MonoBehaviour
     public void Reset()
     {
         _spriteRenderer.enabled = false;
-        _tiles.Item1 = _tiles.Item2 = _selectedTile = null;
+        _tiles.tileA = _tiles.tileB = _selectedTile = null;
     }
 
     public bool IsPlayerSelectedTwoTiles()
     {
-        return _tiles.Item1 != null && _tiles.Item2 != null;
+        return _tiles.tileA != null && _tiles.tileB != null;
     }
 
     public TilePair GetSelectedTiles()

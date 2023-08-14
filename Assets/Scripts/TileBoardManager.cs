@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
-
-using TilePair = System.ValueTuple<Tile, Tile>;
 
 /*
 Board의 역할
@@ -39,8 +35,8 @@ public class TileBoardManager : MonoBehaviour
     {
         _tilePair = tilePair;
 
-        (int srcX, int srcY) = GetTileIndexes(_tilePair.Item1);
-        (int destX, int destY) = GetTileIndexes(_tilePair.Item2);
+        (int srcX, int srcY) = GetTileIndexes(_tilePair.tileA);
+        (int destX, int destY) = GetTileIndexes(_tilePair.tileB);
 
         Debug.Assert(srcX != -1 && srcY != -1 && destX != -1 && destY != -1);
 

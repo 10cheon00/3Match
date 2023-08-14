@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-using TilePair = System.ValueTuple<Tile, Tile>;
+using Assets.Scripts.GameManagerStates;
 
 /*
 GameManager의 역할

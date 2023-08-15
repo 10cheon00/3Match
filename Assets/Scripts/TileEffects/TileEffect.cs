@@ -22,11 +22,13 @@ namespace Assets.Scripts.TileEffects
 
         protected virtual void Start() { }
 
-        public abstract void Play();
+        public virtual void Play() { }
 
         public void ChangeEffect(TileEffect effect)
         {
             _tile.ChangeEffect(effect);
         }
+
+        protected virtual void Stop() { }
     }
 }

@@ -14,16 +14,21 @@ namespace Assets.Scripts.GameManagerStates
             _tileBoardManager = GameManager.TileBoardManager;
         }
 
+        protected override void Start()
+        {
+            FindAllMatchedTiles();
+            PopAllMatchedTilesAndPlayEffect();
+            InsertNewTilesAndPlayEffect();
+        }
+
         public override void Handle()
         {
             // in resolve 3match state, find all 3 match tiles and pop them.
             // and insert new tiles into tileboard.
             // after that, change state to IdleState.
 
-            FindAllMatchedTiles();
-            PopAllMatchedTilesAndPlayEffect();
-            InsertNewTilesAndPlayEffect();
-
+            // TODO
+            // if all pop tile effect ends, change state to idle.
             // GameManager.ChangeState(new GameManagerIdleState());
         }
 
@@ -34,6 +39,10 @@ namespace Assets.Scripts.GameManagerStates
 
         private void PopAllMatchedTilesAndPlayEffect()
         {
+            // TODO
+            // fix algorithm.
+            // current algorithm find duplicated matched tiles.
+
             _matchedTilesList = _tileBoardManager.GetMatchedTilesList();
             foreach(MatchedTiles matchedTiles in _matchedTilesList)
             {

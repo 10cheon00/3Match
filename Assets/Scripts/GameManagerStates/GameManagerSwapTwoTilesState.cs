@@ -11,7 +11,10 @@ namespace Assets.Scripts.GameManagerStates
         public GameManagerSwapTwoTilesState(TilePair tiles)
         {
             _tiles = tiles;
+        }
 
+        protected override void Start()
+        {
             // swap two tile in tileboard.
             // play swapping tile effect.
             SwapTwoTilesAndPlayEffect();

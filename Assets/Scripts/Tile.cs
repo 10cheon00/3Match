@@ -28,6 +28,11 @@ public class Tile : MonoBehaviour
 
     private TileEffect _effect;
 
+    [SerializeField]
+    private Material _flashMaterial;
+    [SerializeField]
+    private GameObject _popParticleEffectPrefab;
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -55,9 +60,9 @@ public class Tile : MonoBehaviour
         ChangeEffect(new TileRotationEffect(this, rotationPoint));
     }
 
-    public void PlayPopEffect() 
+    public void PlayPopEffect()
     { 
-        ChangeEffect(new TilePopEffect(this));
+        ChangeEffect(new TilePopEffect(this, _flashMaterial, _popParticleEffectPrefab));
     }
 
     public void ChangeEffect(TileEffect effect)

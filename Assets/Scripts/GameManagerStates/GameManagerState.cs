@@ -13,6 +13,13 @@ namespace Assets.Scripts.GameManagerStates
             get { return _gameManager; }
         }
 
+        public GameManagerState()
+        {
+            Start();
+        }
+
+        protected virtual void Start() { }
+
         public abstract void Handle();
 
         public void ChangeState(GameManagerState gameManagerState)

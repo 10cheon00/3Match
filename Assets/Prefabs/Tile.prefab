@@ -125,3 +125,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileColor: 0
+  _flashMaterial: {fileID: 2100000, guid: 9f770a75582d813488fecee33ccea4a1, type: 2}
+  _popParticleEffectPrefab: {fileID: 233498628533347628, guid: 11c5d9a6915936b488cda0b461fc525a, type: 3}

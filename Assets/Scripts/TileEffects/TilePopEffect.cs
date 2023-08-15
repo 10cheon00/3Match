@@ -6,25 +6,96 @@ namespace Assets.Scripts.TileEffects
 {
     public class TilePopEffect : TileEffect
     {
-        public TilePopEffect(Tile tile) : base(tile) { }
+        private Material _flashMaterial;
+        private Material _originalTileMaterial;
+        private GameObject _popParticleEffectPrefab;
+        private GameObject _popParticleEffectObject;
+        private ParticleSystem _popParticleSystem;
+        private float _flashingInterval = 0.1f;
+        private bool _isPopParticleEffectRunning;
+
+        public TilePopEffect(Tile tile, Material flashMaterial, GameObject popParticleEffectPrefab)
+            : base(tile)
+        {
+            _flashMaterial = flashMaterial;
+            _popParticleEffectPrefab = popParticleEffectPrefab;
+            _popParticleEffectObject = GameObject.Instantiate(
+                _popParticleEffectPrefab,
+                tile.transform.position,
+                Quaternion.identity
+            );
+            _popParticleEffectObject.transform.SetParent(tile.transform);
+            _popParticleSystem = _popParticleEffectObject.GetComponent<ParticleSystem>();
+        }
+
+        protected override void Start()
+        {
+            _originalTileMaterial = tile.SpriteRenderer.material;
+            _isPopParticleEffectRunning = false;
+
+            tile.StartCoroutine(PlayFlashEffect());
+        }
 
         public override void Play()
         {
-            ChangeMaterialColorToWhite();
-            if (IsMaterialColorEqualWhite())
+            if(_isPopParticleEffectRunning && _popParticleSystem.isStopped)
             {
-                ChangeEffect(new TileEffectReadyState(tile));
+                Stop();
             }
         }
 
-        private void ChangeMaterialColorToWhite()
+        private IEnumerator PlayFlashEffect()
         {
+            // in flash effect, tile flashs itself twice quickly.
+            // and show particle effect after hide itself.
 
+            // TODO
+            // changing material immediately isn't work.
+            // but changing material after wait some amount of time is work.
+
+            yield return new WaitForSeconds(_flashingInterval);
+            ChangeMaterialToFlash();
+            yield return new WaitForSeconds(_flashingInterval);
+            ChangeMaterialToOriginalTileMaterial();
+            yield return new WaitForSeconds(_flashingInterval);
+            ChangeMaterialToFlash();
+            yield return new WaitForSeconds(_flashingInterval);
+            ChangeMaterialToOriginalTileMaterial();
+            yield return new WaitForSeconds(_flashingInterval);
+            ChangeMaterialToFlash();
+            yield return new WaitForSeconds(_flashingInterval);
+            PlayPopParticleSystem();
+            HideTile();
+
+            yield return null;
         }
 
-        private bool IsMaterialColorEqualWhite()
+        private void ChangeMaterialToFlash()
         {
-            return false;
+            tile.SpriteRenderer.material = _flashMaterial;
+        }
+
+        private void ChangeMaterialToOriginalTileMaterial()
+        {
+            tile.SpriteRenderer.material = _originalTileMaterial;
+        }
+
+        private void PlayPopParticleSystem()
+        {
+            _isPopParticleEffectRunning = true;
+            _popParticleSystem.Play();
+        }
+
+        private void HideTile()
+        {
+            tile.SpriteRenderer.enabled = false;
+        }
+
+        protected override void Stop()
+        {
+            ChangeMaterialToOriginalTileMaterial();
+            GameObject.Destroy(_popParticleEffectObject);
+            ChangeEffect(new TileEffectReadyState(tile));
         }
     }
 }

@@ -26,7 +26,7 @@ public class TileBoardFactory : MonoBehaviour
 
         Vector3 offset = new(xSize % 2 == 0 ? -0.5f : 0f, ySize % 2 == 0 ? -0.5f : 0f, 0);
         Vector3 tilePos =
-            new(-_width * (xSize / 2 + offset.x), -_height * (ySize / 2 + offset.y), 0);
+            new(-_width * (xSize / 2 + offset.x), _height * (ySize / 2 + offset.y), 0);
 
         TileBoard tileBoard = new();
 
@@ -37,11 +37,13 @@ public class TileBoardFactory : MonoBehaviour
             for (int j = 0; j < xSize; j++)
             {
                 GameObject tileObject = CreateRandomTileObject();
+                Tile tile = tileObject.GetComponent<Tile>();
+
                 tileObject.transform.SetParent(_tileBoardObject.transform);
                 tileObject.transform.localPosition =
-                    tilePos + new Vector3(_width * j, _height * i, 0);
+                    tilePos + new Vector3(_width * j, -_height * i, 0);
+                tileObject.name = $"({j}, {i})::{tile.Color}Tile";
 
-                Tile tile = tileObject.GetComponent<Tile>();
                 tileList.Add(tile);
             }
 

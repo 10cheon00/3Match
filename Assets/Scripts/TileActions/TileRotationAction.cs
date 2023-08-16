@@ -11,10 +11,6 @@ namespace Assets.Scripts.TileActions
         public TileRotationAction(Tile tile, Vector3 rotationPoint) : base(tile, true)
         {
             _rotationPoint = rotationPoint;
-        }
-
-        protected override void Start()
-        {
             _rotatedAngle = 0;
             tile.SetSpriteSortingOrder((int)TileBoardSortingOrder.SwappingTile);
         }

@@ -24,15 +24,13 @@ namespace Assets.Scripts.TileActions
             );
             _popParticleEffectObject.transform.SetParent(tile.transform);
             _popParticleSystem = _popParticleEffectObject.GetComponent<ParticleSystem>();
-        }
 
-        protected override void Start()
-        {
             _originalTileMaterial = tile.SpriteRenderer.material;
             _isPopParticleEffectRunning = false;
 
             tile.StartCoroutine(PlayFlashEffect());
         }
+
 
         public override void Play()
         {
@@ -47,7 +45,6 @@ namespace Assets.Scripts.TileActions
             // in flash effect, tile flashs itself twice quickly.
             // and show particle effect after hide itself.
 
-            yield return new WaitForSeconds(_flashingInterval);
             ChangeMaterialToFlash();
             yield return new WaitForSeconds(_flashingInterval);
             ChangeMaterialToOriginalTileMaterial();

@@ -17,10 +17,7 @@ namespace Assets.Scripts.TileActions
         public TileAction(Tile tile, bool shouldExecuteInFixedUpdate = false)
         {
             _tile = tile;
-            Start();
         }
-
-        protected virtual void Start() { }
 
         public virtual void Play() { }
 

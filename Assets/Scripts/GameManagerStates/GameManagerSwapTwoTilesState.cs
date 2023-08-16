@@ -6,31 +6,27 @@ namespace Assets.Scripts.GameManagerStates
 {
     public class GameManagerSwapTwoTilesState : GameManagerState
     {
-        private TilePair _tiles;
+        private TilePair _tilePair;
 
-        public GameManagerSwapTwoTilesState(TilePair tiles)
+        public GameManagerSwapTwoTilesState(TilePair tilePair) : base()
         {
-            _tiles = tiles;
-        }
-
-        protected override void Start()
-        {
-            // swap two tile in tileboard.
-            // play swapping tile effect.
+            // tilePair에 아무 값도 들어있지 않음
+            _tilePair = tilePair;
             SwapTwoTilesAndPlayEffect();
         }
 
         private void SwapTwoTilesAndPlayEffect()
         {
-            GameManager.TileBoardManager.SwapTwoTiles(_tiles);
+            Debug.Log($"{_tilePair.tileA.Color} {_tilePair.tileB.Color}");
+            GameManager.TileBoardManager.SwapTwoTiles(_tilePair);
 
             Vector3 midPoint = Vector3.Lerp(
-                _tiles.tileA.transform.position,
-                _tiles.tileB.transform.position,
+                _tilePair.tileA.transform.position,
+                _tilePair.tileB.transform.position,
                 0.5f
             );
-            _tiles.tileA.PlayRotationEffect(midPoint);
-            _tiles.tileB.PlayRotationEffect(midPoint);
+            _tilePair.tileA.PlayRotationEffect(midPoint);
+            _tilePair.tileB.PlayRotationEffect(midPoint);
         }
 
         public override void Handle()
@@ -46,7 +42,7 @@ namespace Assets.Scripts.GameManagerStates
 
         private bool IsSwappingEffectFinished()
         {
-            return _tiles.tileA.IsReadyToPlayTileEffect() && _tiles.tileB.IsReadyToPlayTileEffect();
+            return _tilePair.tileA.IsReadyToPlayTileEffect() && _tilePair.tileB.IsReadyToPlayTileEffect();
         }
     }
 }

@@ -12,10 +12,6 @@ namespace Assets.Scripts.GameManagerStates
         public GameManagerResolve3MatchState()
         {
             _tileBoardManager = GameManager.TileBoardManager;
-        }
-
-        protected override void Start()
-        {
             FindAllMatchedTiles();
             PopAllMatchedTilesAndPlayEffect();
             InsertNewTilesAndPlayEffect();

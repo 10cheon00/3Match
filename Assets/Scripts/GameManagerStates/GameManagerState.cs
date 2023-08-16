@@ -15,10 +15,7 @@ namespace Assets.Scripts.GameManagerStates
 
         public GameManagerState()
         {
-            Start();
         }
-
-        protected virtual void Start() { }
 
         public abstract void Handle();
 

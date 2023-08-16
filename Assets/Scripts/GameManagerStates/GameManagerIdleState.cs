@@ -19,10 +19,10 @@ namespace Assets.Scripts.GameManagerStates
             // when player selected, change state to SwappingState.
             if (_tileSwapHandler.IsPlayerSelectedTwoTiles())
             {
-                TilePair tiles = _tileSwapHandler.GetSelectedTiles();
+                TilePair tilePair = _tileSwapHandler.GetSelectedTiles();
                 _tileSwapHandler.Reset();
-
-                ChangeState(new GameManagerSwapTwoTilesState(tiles));
+                Debug.Log($"{tilePair.tileA.Color} {tilePair.tileB.Color}");
+                ChangeState(new GameManagerSwapTwoTilesState(tilePair));
             }
         }
     }

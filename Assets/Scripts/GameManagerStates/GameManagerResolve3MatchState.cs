@@ -6,13 +6,13 @@ namespace Assets.Scripts.GameManagerStates
 {
     public class GameManagerResolve3MatchState : GameManagerState
     {
-        private MatchedTilesList _matchedTilesList;
+        private MatchedTileList _matchedTileResultList;
         private TileBoardManager _tileBoardManager;
 
         public GameManagerResolve3MatchState()
         {
             _tileBoardManager = GameManager.TileBoardManager;
-            FindAllMatchedTiles();
+            FindAllMatchedTile();
             PopAllMatchedTilesAndPlayEffect();
             InsertNewTilesAndPlayEffect();
         }
@@ -28,9 +28,9 @@ namespace Assets.Scripts.GameManagerStates
             // GameManager.ChangeState(new GameManagerIdleState());
         }
 
-        private void FindAllMatchedTiles()
+        private void FindAllMatchedTile()
         {
-            _tileBoardManager.FindAll3MatchTiles();
+            _tileBoardManager.FindAllMatchedTile();
         }
 
         private void PopAllMatchedTilesAndPlayEffect()
@@ -39,16 +39,12 @@ namespace Assets.Scripts.GameManagerStates
             // fix algorithm.
             // current algorithm find duplicated matched tiles.
 
-            _matchedTilesList = _tileBoardManager.GetMatchedTilesList();
-            foreach(MatchedTiles matchedTiles in _matchedTilesList)
+            _matchedTileResultList = _tileBoardManager.GetMatchedTileResultList();
+            foreach(Tile tile in _matchedTileResultList)
             {
-                foreach(Tile tile in matchedTiles)
-                {
-                    tile.PlayPopEffect();
-                }
+                tile.PlayPopEffect();
             }
             _tileBoardManager.PopAllMatchedTiles();
-
         }
 
         private void InsertNewTilesAndPlayEffect() { }

@@ -17,7 +17,6 @@ namespace Assets.Scripts.GameManagerStates
 
         private void SwapTwoTilesAndPlayEffect()
         {
-            Debug.Log($"{_tilePair.tileA.Color} {_tilePair.tileB.Color}");
             GameManager.TileBoardManager.SwapTwoTiles(_tilePair);
 
             Vector3 midPoint = Vector3.Lerp(

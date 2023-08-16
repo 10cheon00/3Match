@@ -21,7 +21,6 @@ namespace Assets.Scripts.GameManagerStates
             {
                 TilePair tilePair = _tileSwapHandler.GetSelectedTiles();
                 _tileSwapHandler.Reset();
-                Debug.Log($"{tilePair.tileA.Color} {tilePair.tileB.Color}");
                 ChangeState(new GameManagerSwapTwoTilesState(tilePair));
             }
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,31 +7,48 @@ Board의 역할
 1. 게임에 사용될 자료구조를 관리한다.
 */
 
-public class MatchedTiles : List<Tile>
+struct Coord
 {
-    public MatchedTiles() { }
+    public int x,
+        y;
 
-    // clone constructor
-    public MatchedTiles(MatchedTiles otherMatchedTiles) : base(otherMatchedTiles) { }
+    public Coord(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public static Coord operator +(Coord a, Coord b) => new Coord(a.x + b.x, a.y + b.y);
 }
 
-public class MatchedTilesList : List<MatchedTiles> { }
+public class MatchedTileList : List<Tile> { }
 
 public class TileBoardManager : MonoBehaviour
 {
     private TilePair _tilePair;
     private TileBoard _tileBoard;
 
-    private MatchedTilesList _matchedTilesList;
-    private MatchedTiles _matchedTiles;
+    private MatchedTileList _matchedTileResultList;
+    private List<(Tile, Coord)> _foundMatchedTiles;
+    private List<List<bool>> _isMatchedTile;
+    private Coord[] _directionList;
 
     public void Initialize(TileBoard tileBoard)
     {
         _tileBoard = tileBoard;
-        _matchedTilesList = new();
-        _matchedTiles = new();
+        _matchedTileResultList = new();
+        _foundMatchedTiles = new();
+        _isMatchedTile = new();
+        _directionList = new Coord[]
+        {
+            new Coord(-1, 0),
+            new Coord(0, -1),
+            new Coord(1, 0),
+            new Coord(0, 1)
+        };
     }
 
+#region SwapTwoTiles
     public void SwapTwoTiles(TilePair tilePair)
     {
         _tilePair = tilePair;
@@ -75,117 +93,110 @@ public class TileBoardManager : MonoBehaviour
             _tileBoard[destY][destX]
         );
     }
+#endregion SwapTwoTiles
 
-    public void FindAll3MatchTiles()
+#region PopAllMatchedTiles
+    public void FindAllMatchedTile()
     {
-        _matchedTilesList.Clear();
+        InitializeMatchedTileBoard();
 
         for (int i = 0; i < _tileBoard.Count; i++)
         {
             for (int j = 0; j < _tileBoard[i].Count; j++)
             {
-                Find3MatchFromTile(j, i);
+                FindMatchedTilesOnCoord(new(j, i));
             }
         }
     }
 
-    private void Find3MatchFromTile(int x, int y)
+    private void InitializeMatchedTileBoard()
     {
-        // find 3 match in each direction
-        (int, int)[] directions = { (-1, 0), (1, 0), (0, -1), (0, 1) };
-        foreach ((int, int) direction in directions)
+        _isMatchedTile.Clear();
+        for (int i = 0; i < _tileBoard.Count; i++)
         {
-            _matchedTiles.Clear();
-            _matchedTiles.Add(_tileBoard[y][x]);
-            Find3MatchFromTileWithDirection(x, y, direction);
-        }
-    }
-
-    private void Find3MatchFromTileWithDirection(int x, int y, (int, int) direction)
-    {
-        int dirX = direction.Item1,
-            dirY = direction.Item2;
-
-        if (
-            IsIndexOutOfRange(x + dirX, y + dirY)
-            || IsNotEqualTwoTilesColor(_tileBoard[y][x], _tileBoard[y + dirY][x + dirX])
-        )
-        {
-            if (IsMatchedTilesCountEqualOrGreaterThan3() && IsNotDuplicatedMatchedTiles())
+            _isMatchedTile.Add(new());
+            for (int j = 0; j < _tileBoard[i].Count; j++)
             {
-                _matchedTilesList.Add(new MatchedTiles(_matchedTiles));
+                _isMatchedTile[i].Add(false);
             }
+        }
+    }
+
+    private void FindMatchedTilesOnCoord(Coord coord)
+    {
+
+        foreach (Coord direction in _directionList)
+        {
+            _foundMatchedTiles.Clear();
+            _foundMatchedTiles.Add((_tileBoard[coord.y][coord.x], coord));
+            FindMatchedTilesOnCoordWithDirection(coord, direction);
+
+            if (IsFoundMatchedTilesCountGreaterThan2() && IsNotDuplicatedFoundMatchedTiles())
+            {
+                AddMatchedTilesToResultList();
+            }
+        }
+    }
+
+    private void FindMatchedTilesOnCoordWithDirection(Coord coord, Coord direction)
+    {
+        Coord nextCoord = coord + direction;
+        if (IsOutOfRangeCoordInTileBoard(nextCoord))
+        {
             return;
         }
-        else
+
+        Tile currentTile = _tileBoard[coord.y][coord.x];
+        Tile nextTile = _tileBoard[nextCoord.y][nextCoord.x];
+
+        if (currentTile.Color == nextTile.Color)
         {
-            _matchedTiles.Add(_tileBoard[y + dirY][x + dirX]);
-            Find3MatchFromTileWithDirection(x + dirX, y + dirY, direction);
+            _foundMatchedTiles.Add((nextTile, nextCoord));
+            FindMatchedTilesOnCoordWithDirection(nextCoord, direction);
         }
     }
 
-    private bool IsIndexOutOfRange(int x, int y)
+    private bool IsOutOfRangeCoordInTileBoard(Coord coord)
     {
-        return x < 0 || y < 0 || x >= _tileBoard[0].Count || y >= _tileBoard.Count;
+        return coord.x < 0
+            || coord.y < 0
+            || coord.y >= _tileBoard.Count
+            || coord.x >= _tileBoard[coord.y].Count;
     }
 
-    private bool IsNotEqualTwoTilesColor(Tile tileA, Tile tileB)
+    private bool IsFoundMatchedTilesCountGreaterThan2()
     {
-        return tileA.Color != tileB.Color;
+        return _foundMatchedTiles.Count > 2;
     }
 
-    private bool IsMatchedTilesCountEqualOrGreaterThan3()
+    private bool IsNotDuplicatedFoundMatchedTiles()
     {
-        return _matchedTiles.Count >= 3;
-    }
-
-    private bool IsNotDuplicatedMatchedTiles()
-    // TODO
-    // 두 matchedTiles가 같은 원소를 포함하고 있는지 확인하려면 별도의 정보가 필요하다.
-    // 단순히 원소 비교만 해서는 불가능하다.
-    // 해시값 비교 또는 삽입할 때 정렬이 되도록 하는 방법이 있겠다.
-    {
-        foreach (MatchedTiles matchedTiles in _matchedTilesList)
+        foreach ((Tile tile, Coord coord) in _foundMatchedTiles)
         {
-            if (matchedTiles.Count != _matchedTiles.Count)
-                continue;
-
-            bool areTwoMatchedTilesEqual = true;
-            for (int i = 0; i < _matchedTiles.Count; i++)
-            {
-                if (_matchedTiles[i] != matchedTiles[i])
-                {
-                    areTwoMatchedTilesEqual = false;
-                    break;
-                }
-            }
-            if (areTwoMatchedTilesEqual)
+            if (_isMatchedTile[coord.y][coord.x] == false)
             {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
-    public void PopAllMatchedTiles()
+    private void AddMatchedTilesToResultList()
     {
-        foreach (MatchedTiles matchedTiles in _matchedTilesList)
+        foreach ((Tile tile, Coord coord) in _foundMatchedTiles)
         {
-            string colors = "";
-            matchedTiles.ForEach(
-                (tile) =>
-                {
-                    colors = $"{colors} {tile.Color}";
-                }
-            );
-            Debug.Log(colors);
+            _matchedTileResultList.Add(tile);
+            _isMatchedTile[coord.y][coord.x] = true;
         }
     }
 
-    public MatchedTilesList GetMatchedTilesList()
+    public void PopAllMatchedTiles() { }
+
+    public MatchedTileList GetMatchedTileResultList()
     {
-        return _matchedTilesList;
+        return _matchedTileResultList;
     }
+#endregion PopAll3MatchedTiles
 
     public void ResetTileBoard() { }
 }

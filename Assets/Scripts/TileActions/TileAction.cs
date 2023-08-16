@@ -1,6 +1,6 @@
-namespace Assets.Scripts.TileEffects
+namespace Assets.Scripts.TileActions
 {
-    public abstract class TileEffect
+    public abstract class TileAction
     {
         private Tile _tile;
         protected Tile tile
@@ -14,7 +14,7 @@ namespace Assets.Scripts.TileEffects
             get { return _shouldExecuteInFixedUpdate; }
         }
 
-        public TileEffect(Tile tile, bool shouldExecuteInFixedUpdate = false)
+        public TileAction(Tile tile, bool shouldExecuteInFixedUpdate = false)
         {
             _tile = tile;
             Start();
@@ -24,7 +24,7 @@ namespace Assets.Scripts.TileEffects
 
         public virtual void Play() { }
 
-        public void ChangeEffect(TileEffect effect)
+        public void ChangeEffect(TileAction effect)
         {
             _tile.ChangeEffect(effect);
         }

@@ -1,14 +1,14 @@
 using UnityEngine;
 
-namespace Assets.Scripts.TileEffects
+namespace Assets.Scripts.TileActions
 {
-    public class TileRotationEffect : TileEffect
+    public class TileRotationAction : TileAction
     {
         private Vector3 _rotationPoint;
         private float _rotatedAngle;
         private readonly float _angle = 10f;
 
-        public TileRotationEffect(Tile tile, Vector3 rotationPoint) : base(tile, true)
+        public TileRotationAction(Tile tile, Vector3 rotationPoint) : base(tile, true)
         {
             _rotationPoint = rotationPoint;
         }
@@ -41,7 +41,7 @@ namespace Assets.Scripts.TileEffects
         protected override void Stop()
         {
             tile.SetSpriteSortingOrder((int)TileBoardSortingOrder.Default);
-            ChangeEffect(new TileEffectReadyState(tile));
+            ChangeEffect(new TileReadyAction(tile));
         }
     }
 }

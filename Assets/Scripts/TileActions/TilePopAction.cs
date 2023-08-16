@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.TileEffects
+namespace Assets.Scripts.TileActions
 {
-    public class TilePopEffect : TileEffect
+    public class TilePopAction : TileAction
     {
         private Material _flashMaterial;
         private Material _originalTileMaterial;
@@ -13,7 +13,7 @@ namespace Assets.Scripts.TileEffects
         private float _flashingInterval = 0.1f;
         private bool _isPopParticleEffectRunning;
 
-        public TilePopEffect(Tile tile, Material flashMaterial, GameObject popParticleEffectPrefab)
+        public TilePopAction(Tile tile, Material flashMaterial, GameObject popParticleEffectPrefab)
             : base(tile)
         {
             _flashMaterial = flashMaterial;
@@ -46,10 +46,6 @@ namespace Assets.Scripts.TileEffects
         {
             // in flash effect, tile flashs itself twice quickly.
             // and show particle effect after hide itself.
-
-            // TODO
-            // changing material immediately isn't work.
-            // but changing material after wait some amount of time is work.
 
             yield return new WaitForSeconds(_flashingInterval);
             ChangeMaterialToFlash();
@@ -93,7 +89,7 @@ namespace Assets.Scripts.TileEffects
         {
             ChangeMaterialToOriginalTileMaterial();
             GameObject.Destroy(_popParticleEffectObject);
-            ChangeEffect(new TileEffectReadyState(tile));
+            ChangeEffect(new TileReadyAction(tile));
         }
     }
 }

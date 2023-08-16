@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-using Assets.Scripts.TileEffects;
+using Assets.Scripts.TileActions;
 
 /*
 Tile의 역할
@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
         set { _tileColor = value; }
     }
 
-    private TileEffect _effect;
+    private TileAction _effect;
 
     [SerializeField]
     private Material _flashMaterial;
@@ -36,7 +36,7 @@ public class Tile : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _effect = new TileEffectReadyState(this);
+        _effect = new TileReadyAction(this);
     }
 
     private void FixedUpdate()
@@ -57,22 +57,22 @@ public class Tile : MonoBehaviour
 
     public void PlayRotationEffect(Vector3 rotationPoint)
     {
-        ChangeEffect(new TileRotationEffect(this, rotationPoint));
+        ChangeEffect(new TileRotationAction(this, rotationPoint));
     }
 
     public void PlayPopEffect()
     { 
-        ChangeEffect(new TilePopEffect(this, _flashMaterial, _popParticleEffectPrefab));
+        ChangeEffect(new TilePopAction(this, _flashMaterial, _popParticleEffectPrefab));
     }
 
-    public void ChangeEffect(TileEffect effect)
+    public void ChangeEffect(TileAction effect)
     {
         _effect = effect;
     }
 
     public bool IsReadyToPlayTileEffect()
     {
-        return _effect is TileEffectReadyState;
+        return _effect is TileReadyAction;
     }
 
     public void SetSpriteSortingOrder(int order)

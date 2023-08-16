@@ -43,7 +43,6 @@ public class TileBoardManager : MonoBehaviour
         if (AreTwoTilesAdjacent(srcX, srcY, destX, destY))
         {
             SwapTileInTileBoard(srcX, srcY, destX, destY);
-            // PlayTileSwapEffect(src, dest);
         }
     }
 
@@ -88,15 +87,6 @@ public class TileBoardManager : MonoBehaviour
                 Find3MatchFromTile(j, i);
             }
         }
-
-        // if (Is3MatchExist())
-        // {
-        //     PopAll3Match();
-        // }
-        // else
-        // {
-        //     ResetTileBoard();
-        // }
     }
 
     private void Find3MatchFromTile(int x, int y)

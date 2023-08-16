@@ -8,7 +8,6 @@ namespace Assets.Scripts.TileEffects
     {
         private Material _flashMaterial;
         private Material _originalTileMaterial;
-        private GameObject _popParticleEffectPrefab;
         private GameObject _popParticleEffectObject;
         private ParticleSystem _popParticleSystem;
         private float _flashingInterval = 0.1f;
@@ -18,9 +17,8 @@ namespace Assets.Scripts.TileEffects
             : base(tile)
         {
             _flashMaterial = flashMaterial;
-            _popParticleEffectPrefab = popParticleEffectPrefab;
             _popParticleEffectObject = GameObject.Instantiate(
-                _popParticleEffectPrefab,
+                popParticleEffectPrefab,
                 tile.transform.position,
                 Quaternion.identity
             );

@@ -3,7 +3,7 @@ using UnityEngine;
 public class TileSwapHandler : MonoBehaviour
 {
     private Tile _selectedTile;
-    private TilePair _tiles;
+    private TilePair _tilePair;
 
     private SpriteRenderer _spriteRenderer;
 
@@ -62,17 +62,17 @@ public class TileSwapHandler : MonoBehaviour
                 reset
         */
 
-        if (_tiles.tileA is null)
+        if (_tilePair.tileA is null)
         {
-            _tiles.tileA = _selectedTile;
-            transform.position = _tiles.tileA.transform.position;
+            _tilePair.tileA = _selectedTile;
+            transform.position = _tilePair.tileA.transform.position;
             Show();
         }
         else
         {
-            if (_tiles.tileA != _selectedTile)
+            if (_tilePair.tileA != _selectedTile)
             {
-                _tiles.tileB = _selectedTile;
+                _tilePair.tileB = _selectedTile;
             }
             else
             {
@@ -89,16 +89,16 @@ public class TileSwapHandler : MonoBehaviour
     public void Reset()
     {
         _spriteRenderer.enabled = false;
-        _tiles.tileA = _tiles.tileB = _selectedTile = null;
+        _tilePair.tileA = _tilePair.tileB = _selectedTile = null;
     }
 
     public bool IsPlayerSelectedTwoTiles()
     {
-        return _tiles.tileA != null && _tiles.tileB != null;
+        return _tilePair.tileA != null && _tilePair.tileB != null;
     }
 
     public TilePair GetSelectedTiles()
     {
-        return _tiles;
+        return _tilePair;
     }
 }

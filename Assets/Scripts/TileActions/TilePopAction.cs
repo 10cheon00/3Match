@@ -86,7 +86,7 @@ namespace Assets.Scripts.TileActions
         {
             ChangeMaterialToOriginalTileMaterial();
             GameObject.Destroy(_popParticleEffectObject);
-            ChangeEffect(new TileReadyAction(tile));
+            ChangeAction(new TileReadyAction(tile));
         }
     }
 }

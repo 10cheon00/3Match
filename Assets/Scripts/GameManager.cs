@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        _gameManagerState.Handle();
+        _gameManagerState.Run();
     }
 
     public void ChangeState(GameManagerState state)

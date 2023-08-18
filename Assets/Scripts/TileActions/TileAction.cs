@@ -21,9 +21,9 @@ namespace Assets.Scripts.TileActions
 
         public virtual void Play() { }
 
-        public void ChangeEffect(TileAction effect)
+        public void ChangeAction(TileAction effect)
         {
-            _tile.ChangeEffect(effect);
+            _tile.ChangeAction(effect);
         }
 
         protected virtual void Stop() { }

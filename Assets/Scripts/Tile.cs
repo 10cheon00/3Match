@@ -55,22 +55,27 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void PlayRotationEffect(Vector3 rotationPoint)
+    public void PlayRotationAction(Vector3 rotationPoint)
     {
-        ChangeEffect(new TileRotationAction(this, rotationPoint));
+        ChangeAction(new TileRotationAction(this, rotationPoint));
     }
 
-    public void PlayPopEffect()
+    public void PlayPopAction()
     { 
-        ChangeEffect(new TilePopAction(this, _flashMaterial, _popParticleEffectPrefab));
+        ChangeAction(new TilePopAction(this, _flashMaterial, _popParticleEffectPrefab));
     }
 
-    public void ChangeEffect(TileAction effect)
+    public void PlayNewTileInsertAction()
+    {
+        ChangeAction(new TileInitializeAction(this));
+    }
+
+    public void ChangeAction(TileAction effect)
     {
         _effect = effect;
     }
 
-    public bool IsReadyToPlayTileEffect()
+    public bool IsReadyToPlayTileAction()
     {
         return _effect is TileReadyAction;
     }

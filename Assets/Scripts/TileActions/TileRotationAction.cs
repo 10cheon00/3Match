@@ -37,7 +37,7 @@ namespace Assets.Scripts.TileActions
         protected override void Stop()
         {
             tile.SetSpriteSortingOrder((int)TileBoardSortingOrder.Default);
-            ChangeEffect(new TileReadyAction(tile));
+            ChangeAction(new TileReadyAction(tile));
         }
     }
 }

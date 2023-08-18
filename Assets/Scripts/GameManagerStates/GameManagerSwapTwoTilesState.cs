@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Assets.Scripts.GameManagerStates.GameManagerTasks;
+
 namespace Assets.Scripts.GameManagerStates
 {
     public class GameManagerSwapTwoTilesState : GameManagerState
@@ -10,38 +12,19 @@ namespace Assets.Scripts.GameManagerStates
 
         public GameManagerSwapTwoTilesState(TilePair tilePair) : base()
         {
-            // tilePair에 아무 값도 들어있지 않음
             _tilePair = tilePair;
-            SwapTwoTilesAndPlayEffect();
-        }
 
-        private void SwapTwoTilesAndPlayEffect()
-        {
             GameManager.TileBoardManager.SwapTwoTiles(_tilePair);
-
-            Vector3 midPoint = Vector3.Lerp(
-                _tilePair.tileA.transform.position,
-                _tilePair.tileB.transform.position,
-                0.5f
-            );
-            _tilePair.tileA.PlayRotationEffect(midPoint);
-            _tilePair.tileB.PlayRotationEffect(midPoint);
+            AddTask(new GameManagerTilePairSwapActionTask(this, _tilePair));
+            // SwapTwoTilesAndPlayEffect();
         }
 
-        public override void Handle()
+        public override void OnFinishAllTask()
         {
             // in swapping state, swap two tiles and play swapping effect.
             // after end of swapping effect, change state to Resolve3Match.
 
-            if (IsSwappingEffectFinished())
-            {
-                ChangeState(new GameManagerResolve3MatchState());
-            }
-        }
-
-        private bool IsSwappingEffectFinished()
-        {
-            return _tilePair.tileA.IsReadyToPlayTileEffect() && _tilePair.tileB.IsReadyToPlayTileEffect();
+            ChangeState(new GameManagerResolve3MatchState());
         }
     }
 }

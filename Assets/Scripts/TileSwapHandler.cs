@@ -52,16 +52,6 @@ public class TileSwapHandler : MonoBehaviour
 
     private void SelectTile()
     {
-        /*
-        if tileA is null:
-            tileA = selectedTile
-        else:
-            if tileA != selectedTile:
-                tileB = selectedTile
-            else:
-                reset
-        */
-
         if (_tilePair.tileA is null)
         {
             _tilePair.tileA = _selectedTile;

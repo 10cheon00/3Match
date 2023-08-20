@@ -13,7 +13,7 @@ namespace Assets.Scripts.GameManagerStates.GameManagerTasks
         }
         
         public abstract void RunTask();
-        public void FinishTask()
+        public virtual void FinishTask()
         {
             _gameManagerState.FinishTask();
         }

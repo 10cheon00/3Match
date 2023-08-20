@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameManagerStates.GameManagerTasks
 {
-    public class GameManagerTilePairSwapActionTask : GameManagerTask
+    public class GameManagerPlayTilePairSwapActionTask : GameManagerTask
     {
         private TilePair _tilePair;
 
-        public GameManagerTilePairSwapActionTask(GameManagerState gameManagerState, TilePair tilePair)
+        public GameManagerPlayTilePairSwapActionTask(GameManagerState gameManagerState, TilePair tilePair)
             : base(gameManagerState) 
         {
             _tilePair = tilePair;

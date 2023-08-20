@@ -14,7 +14,7 @@ namespace Assets.Scripts.GameManagerStates
         {
             _tileSwapHandler = GameManager.TileSwapHandler;
 
-            AddTask(new GameManagerTilePairSelectTask(this, _tileSwapHandler));
+            AddTask(new GameManagerSelectTilePairTask(this, _tileSwapHandler));
         }
 
         public override void OnFinishAllTask()
@@ -25,13 +25,6 @@ namespace Assets.Scripts.GameManagerStates
             TilePair tilePair = _tileSwapHandler.GetSelectedTiles();
             _tileSwapHandler.Reset();
             ChangeState(new GameManagerSwapTwoTilesState(tilePair));
-
-            // if (_tileSwapHandler.IsPlayerSelectedTwoTiles())
-            // {
-            //     TilePair tilePair = _tileSwapHandler.GetSelectedTiles();
-            //     _tileSwapHandler.Reset();
-            //     ChangeState(new GameManagerSwapTwoTilesState(tilePair));
-            // }
         }
     }
 }

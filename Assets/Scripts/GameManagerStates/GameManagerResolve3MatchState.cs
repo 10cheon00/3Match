@@ -18,7 +18,8 @@ namespace Assets.Scripts.GameManagerStates
             GetAllMatchedTileFromTileBoard();
             PopAllMatchedTile();
             AddTask(new GameManagerPlayAllMatchedTilePopActionTask(this, _matchedTileResultList));
-            // InsertNewTilesAndPlayAction();
+            // AddTask(new GameManagerInsertNewTilesTask(this, _matchedTileResultList));
+            // AddTask(new GameMangaerPlayInsertNewTilesActionTask(this, _newTileList));
         }
 
         private void GetAllMatchedTileFromTileBoard()
@@ -31,14 +32,6 @@ namespace Assets.Scripts.GameManagerStates
         {
             _tileBoardManager.PopAllMatchedTiles();
         }
-
-        private void InsertNewTilesAndPlayAction() 
-        {
-            foreach(Tile tile in _matchedTileResultList)
-            {
-                tile.PlayNewTileInsertAction();
-            }
-        }
         
         public override void OnFinishAllTask()
         {
@@ -47,18 +40,6 @@ namespace Assets.Scripts.GameManagerStates
             // after that, change state to IdleState.
 
             GameManager.ChangeState(new GameManagerIdleState());
-
-            // TODO
-            // if all pop tile effect ends, change state to idle.
-            // if (IsNewTilesInserted())
-            // {
-            //     GameManager.ChangeState(new GameManagerIdleState());
-            // }
-        }
-
-        private bool IsNewTilesInserted()
-        {
-            return false;
         }
     }
 }

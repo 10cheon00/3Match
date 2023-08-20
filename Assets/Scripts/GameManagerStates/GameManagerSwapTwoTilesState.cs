@@ -15,8 +15,7 @@ namespace Assets.Scripts.GameManagerStates
             _tilePair = tilePair;
 
             GameManager.TileBoardManager.SwapTwoTiles(_tilePair);
-            AddTask(new GameManagerTilePairSwapActionTask(this, _tilePair));
-            // SwapTwoTilesAndPlayEffect();
+            AddTask(new GameManagerPlayTilePairSwapActionTask(this, _tilePair));
         }
 
         public override void OnFinishAllTask()

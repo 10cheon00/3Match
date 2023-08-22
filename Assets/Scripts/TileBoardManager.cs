@@ -131,7 +131,7 @@ public class TileBoardManager : MonoBehaviour
             _foundMatchedTiles.Add((_tileBoard[coord.y][coord.x], coord));
             FindMatchedTilesOnCoordWithDirection(coord, direction);
 
-            if (IsFoundMatchedTilesCountGreaterThan2() && IsNotDuplicatedFoundMatchedTiles())
+            if (IsFoundMatchedTilesCountGreaterThan2() && IsNotAlreadyFoundMatchedTile())
             {
                 AddMatchedTilesToResultList();
             }
@@ -169,7 +169,7 @@ public class TileBoardManager : MonoBehaviour
         return _foundMatchedTiles.Count > 2;
     }
 
-    private bool IsNotDuplicatedFoundMatchedTiles()
+    private bool IsNotAlreadyFoundMatchedTile()
     {
         foreach ((Tile tile, Coord coord) in _foundMatchedTiles)
         {

@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
         set { _tileColor = value; }
     }
 
-    private TileAction _effect;
+    private TileAction _action;
 
     [SerializeField]
     private Material _flashMaterial;
@@ -36,22 +36,22 @@ public class Tile : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _effect = new TileReadyAction(this);
+        _action = new TileReadyAction(this);
     }
 
     private void FixedUpdate()
     {
-        if (_effect.ShouldExecuteInFixedUpdate)
+        if (_action.ShouldExecuteInFixedUpdate)
         {
-            _effect.Play();
+            _action.Play();
         }
     }
 
     private void Update()
     {
-        if (_effect.ShouldExecuteInFixedUpdate == false)
+        if (_action.ShouldExecuteInFixedUpdate == false)
         {
-            _effect.Play();
+            _action.Play();
         }
     }
 
@@ -70,14 +70,14 @@ public class Tile : MonoBehaviour
         ChangeAction(new TileInitializeAction(this));
     }
 
-    public void ChangeAction(TileAction effect)
+    public void ChangeAction(TileAction action)
     {
-        _effect = effect;
+        _action = action;
     }
 
     public bool IsReadyToPlayTileAction()
     {
-        return _effect is TileReadyAction;
+        return _action is TileReadyAction;
     }
 
     public void SetSpriteSortingOrder(int order)

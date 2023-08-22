@@ -53,18 +53,18 @@ public class TileBoardManager : MonoBehaviour
     {
         _tilePair = tilePair;
 
-        (int srcX, int srcY) = GetTileIndexes(_tilePair.tileA);
-        (int destX, int destY) = GetTileIndexes(_tilePair.tileB);
+        Coord srcCoord = GetTileIndexes(_tilePair.tileA);
+        Coord destCoord = GetTileIndexes(_tilePair.tileB);
 
-        Debug.Assert(srcX != -1 && srcY != -1 && destX != -1 && destY != -1);
+        Debug.Assert(srcCoord.x != -1 && srcCoord.y != -1 && destCoord.x != -1 && destCoord.y != -1);
 
-        if (AreTwoTilesAdjacent(srcX, srcY, destX, destY))
+        if (AreTwoTilesAdjacent(srcCoord, destCoord))
         {
-            SwapTileInTileBoard(srcX, srcY, destX, destY);
+            SwapTileInTileBoard(srcCoord, destCoord);
         }
     }
 
-    private (int, int) GetTileIndexes(Tile tile)
+    private Coord GetTileIndexes(Tile tile)
     {
         for (int i = 0; i < _tileBoard.Count; i++)
         {
@@ -72,25 +72,25 @@ public class TileBoardManager : MonoBehaviour
             {
                 if (_tileBoard[i][j] == tile)
                 {
-                    return (j, i);
+                    return new(j, i);
                 }
             }
         }
-        return (-1, -1);
+        return new(-1, -1);
     }
 
-    private bool AreTwoTilesAdjacent(int srcX, int srcY, int destX, int destY)
+    private bool AreTwoTilesAdjacent(Coord coordA, Coord coordB)
     {
-        int xDiff = Mathf.Abs(srcX - destX);
-        int yDiff = Mathf.Abs(srcY - destY);
+        int xDiff = Mathf.Abs(coordA.x - coordB.x);
+        int yDiff = Mathf.Abs(coordA.y - coordB.y);
         return xDiff + yDiff == 1;
     }
 
-    private void SwapTileInTileBoard(int srcX, int srcY, int destX, int destY)
+    private void SwapTileInTileBoard(Coord coordA, Coord coordB)
     {
-        (_tileBoard[destY][destX], _tileBoard[srcY][srcX]) = (
-            _tileBoard[srcY][srcX],
-            _tileBoard[destY][destX]
+        (_tileBoard[coordB.y][coordB.x], _tileBoard[coordA.y][coordA.x]) = (
+            _tileBoard[coordA.y][coordA.x],
+            _tileBoard[coordB.y][coordB.x]
         );
     }
 #endregion SwapTwoTiles

@@ -6,7 +6,7 @@ namespace Assets.Scripts.TileActions
     {
         private Vector3 _rotationPoint;
         private float _rotatedAngle;
-        private readonly float _angle = 10f;
+        private readonly float _angle = 5f;
 
         public TileRotationAction(Tile tile, Vector3 rotationPoint) : base(tile, true)
         {
@@ -20,14 +20,14 @@ namespace Assets.Scripts.TileActions
             tile.transform.RotateAround(_rotationPoint, Vector3.forward, _angle);
             _rotatedAngle += _angle;
 
-            ResetRotation();
+            ResetTileRotation();
             if (_rotatedAngle >= 180f)
             {
                 Stop();
             }
         }
 
-        private void ResetRotation()
+        private void ResetTileRotation()
         {
             Quaternion quaternion = tile.transform.rotation;
             quaternion.eulerAngles = Vector3.zero;

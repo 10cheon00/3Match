@@ -10,7 +10,7 @@ namespace Assets.Scripts.TileActions
         private Material _originalTileMaterial;
         private GameObject _popParticleEffectObject;
         private ParticleSystem _popParticleSystem;
-        private float _flashingInterval = 0.1f;
+        private float _flashingInterval = 0.5f;
         private bool _isPopParticleEffectRunning;
 
         public TilePopAction(Tile tile, Material flashMaterial, GameObject popParticleEffectPrefab)

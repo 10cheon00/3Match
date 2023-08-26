@@ -95,7 +95,7 @@ public class TileBoardManager : MonoBehaviour
     }
 #endregion SwapTwoTiles
 
-#region PopAllMatchedTiles
+#region Resolve3Match
     public void FindAllMatchedTile()
     {
         InitializeMatchedTileBoard();
@@ -190,13 +190,32 @@ public class TileBoardManager : MonoBehaviour
         }
     }
 
-    public void PopAllMatchedTiles() { }
-
     public MatchedTileList GetMatchedTileResultList()
     {
         return _matchedTileResultList;
     }
-#endregion PopAll3MatchedTiles
+#endregion Resolve3Match
+
+#region PopAllMatchedTile
+
+    public void DestroyAllMatchedTile()
+    {
+        foreach(Tile tile in _matchedTileResultList)
+        {
+            Coord coord = GetTileIndexes(tile);
+            _tileBoard[coord.y][coord.x] = null;
+            GameObject.Destroy(tile.gameObject);
+        }
+        for (int i = 0; i < _tileBoard.Count; i++)
+        {
+            for (int j = 0; j < _tileBoard[i].Count; j++)
+            {
+                UnityEngine.Debug.Log($"{i} {j} {_tileBoard[i][j] == null}");
+            }
+        }
+    }
+
+#endregion PopAllMatchedTile
 
     public void ResetTileBoard() { }
 }

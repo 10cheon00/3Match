@@ -10,27 +10,21 @@ namespace Assets.Scripts.GameManagerStates
     {
         private MatchedTileList _matchedTileResultList;
         private TileBoardManager _tileBoardManager;
+        private List<Tile> _actionTileList;
 
         public GameManagerResolve3MatchState() : base()
         {
             _tileBoardManager = GameManager.TileBoardManager;
             
             GetAllMatchedTileFromTileBoard();
-            PopAllMatchedTile();
             AddTask(new GameManagerPlayAllMatchedTilePopActionTask(this, _matchedTileResultList));
-            // AddTask(new GameManagerInsertNewTilesTask(this, _matchedTileResultList));
-            // AddTask(new GameMangaerPlayInsertNewTilesActionTask(this, _newTileList));
+            AddTask(new GameManagerPopAllMatchedTileTask(this, _tileBoardManager, _matchedTileResultList));
         }
 
         private void GetAllMatchedTileFromTileBoard()
         {
             _tileBoardManager.FindAllMatchedTile();
             _matchedTileResultList = _tileBoardManager.GetMatchedTileResultList();
-        }
-
-        private void PopAllMatchedTile()
-        {
-            _tileBoardManager.PopAllMatchedTiles();
         }
         
         public override void OnFinishAllTask()

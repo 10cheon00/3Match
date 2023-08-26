@@ -28,7 +28,10 @@ namespace Assets.Scripts.TileActions
             _originalTileMaterial = tile.SpriteRenderer.material;
             _isPopParticleEffectRunning = false;
 
-            tile.StartCoroutine(PlayFlashEffect());
+            if (tile.IsReadyToPlayTileAction())
+            {
+                tile.StartCoroutine(PlayFlashEffect());
+            }
         }
 
 

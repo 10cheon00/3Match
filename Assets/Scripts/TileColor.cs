@@ -6,5 +6,6 @@ public enum TileColor
     Green,
     Blue,
     Violet,
+    Null,
     Count
 }

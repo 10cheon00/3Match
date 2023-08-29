@@ -33,6 +33,9 @@ public class TileBoardManager : MonoBehaviour
     private List<List<bool>> _isMatchedTile;
     private Coord[] _directionList;
 
+    [SerializeField]
+    private Tile _nullTile;
+
     public void Initialize(TileBoard tileBoard)
     {
         _tileBoard = tileBoard;
@@ -46,6 +49,8 @@ public class TileBoardManager : MonoBehaviour
             new Coord(1, 0),
             new Coord(0, 1)
         };
+
+        _nullTile = GetComponentInChildren<Tile>();
     }
 
 #region SwapTwoTiles
@@ -203,10 +208,21 @@ public class TileBoardManager : MonoBehaviour
         foreach(Tile tile in _matchedTileResultList)
         {
             Coord coord = GetTileIndexes(tile);
-            _tileBoard[coord.y][coord.x] = null;
+            SetTileToNullTile(coord);
             GameObject.Destroy(tile.gameObject);
         }
-        for (int i = 0; i < _tileBoard.Count; i++)
+    }
+
+    private void SetTileToNullTile(Coord coord)
+    {
+        // TODO
+        // instead of setting null directly into tileboard,
+        // set instance of other tile or singleton tile which means null.
+        // this pattern will avoid null reference exception.
+        _tileBoard[coord.y][coord.x] = _nullTile;
+    }
+
+#endregion PopAllMatchedTile
         {
             for (int j = 0; j < _tileBoard[i].Count; j++)
             {

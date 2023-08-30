@@ -65,9 +65,9 @@ public class Tile : MonoBehaviour
         ChangeAction(new TilePopAction(this, _flashMaterial, _popParticleEffectPrefab));
     }
 
-    public void PlayNewTileInsertAction()
+    public void PlayTileSlideToBottomAction(Vector3 from, Vector3 to)
     {
-        ChangeAction(new TileInitializeAction(this));
+        ChangeAction(new TileSlideToBottomAction(this, from, to));
     }
 
     public void ChangeAction(TileAction action)

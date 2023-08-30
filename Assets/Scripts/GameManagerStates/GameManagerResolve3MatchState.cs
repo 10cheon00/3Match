@@ -18,7 +18,8 @@ namespace Assets.Scripts.GameManagerStates
             
             GetAllMatchedTileFromTileBoard();
             AddTask(new GameManagerPlayAllMatchedTilePopActionTask(this, _matchedTileResultList));
-            AddTask(new GameManagerPopAllMatchedTileTask(this, _tileBoardManager, _matchedTileResultList));
+            AddTask(new GameManagerPopAllMatchedTileTask(this, _tileBoardManager));
+            AddTask(new GameManagerFillTileBoardTask(this, _tileBoardManager));
         }
 
         private void GetAllMatchedTileFromTileBoard()

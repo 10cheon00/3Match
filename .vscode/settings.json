@@ -59,5 +59,8 @@
                 "foreground": "#DCDCAA"
             }
         }]
+    },
+    "[csharp]": {
+        "editor.tabSize": 4
     }
 }

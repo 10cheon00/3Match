@@ -25,14 +25,6 @@ while true:
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private TileBoardFactory _tileBoardFactory;
-
-    [SerializeField]
-    private int xSize = 5;
-    [SerializeField]
-    private int ySize = 5;
-
-    [SerializeField]
     private TileBoardManager _tileBoardManager;
     public TileBoardManager TileBoardManager
     {
@@ -50,8 +42,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        TileBoard tileBoard = _tileBoardFactory.CreateTileBoard(xSize, ySize);
-        _tileBoardManager.Initialize(tileBoard);
+        _tileBoardManager.Initialize();
 
         GameManagerState.SetGameManager(this);
         ChangeState(new GameManagerIdleState());

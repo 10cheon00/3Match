@@ -1,25 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
 Board의 역할
 1. 게임에 사용될 자료구조를 관리한다.
 */
-
-struct Coord
-{
-    public int x,
-        y;
-
-    public Coord(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
-    public static Coord operator +(Coord a, Coord b) => new Coord(a.x + b.x, a.y + b.y);
-}
 
 public class MatchedTileList : List<Tile> { }
 
@@ -27,18 +15,43 @@ public class TileBoardManager : MonoBehaviour
 {
     private TilePair _tilePair;
     private TileBoard _tileBoard;
+    public TileBoard TileBoard
+    {
+        get { return _tileBoard; }
+    }
 
     private MatchedTileList _matchedTileResultList;
     private List<(Tile, Coord)> _foundMatchedTiles;
     private List<List<bool>> _isMatchedTile;
     private Coord[] _directionList;
 
+#region TileBoardFactory
+    [SerializeField]
+    private Coord _tileBoardSize;
+    public Coord TileBoardSize
+    {
+        get { return _tileBoardSize; }
+    }
+    [SerializeField]
+    private TileBoardFactory _tileBoardFactory;
+    // TODO
+    // this is required just for calculate position by coord in FillTileBoardTask class.
+    // FillTileBoardTask class doesn't need factory, so this should be refactored.
+    public TileBoardFactory TileBoardFactory
+    {
+        get { return _tileBoardFactory; }
+    }
+#endregion TileBoardFactory
+
     [SerializeField]
     private Tile _nullTile;
 
-    public void Initialize(TileBoard tileBoard)
+    [SerializeField]
+    private Text text;
+
+    public void Initialize()
     {
-        _tileBoard = tileBoard;
+        _tileBoard = _tileBoardFactory.CreateTileBoard(_tileBoardSize);
         _matchedTileResultList = new();
         _foundMatchedTiles = new();
         _isMatchedTile = new();
@@ -53,15 +66,40 @@ public class TileBoardManager : MonoBehaviour
         _nullTile = GetComponentInChildren<Tile>();
     }
 
+#region DEBUG
+    private void Update()
+    {
+        string str = "";
+        for (int i = 0; i < _tileBoard.Count; i++)
+        {
+            for (int j = 0; j < _tileBoard[i].Count; j++)
+            {
+                if (IsNullTileCoord(new(j, i)))
+                {
+                    str += "- ";
+                }
+                else
+                {
+                    str += $"{(int)_tileBoard[i][j].Color} ";
+                }
+            }
+            str += "\n";
+        }
+        text.text = str;
+    }
+#endregion DEBUG
+
 #region SwapTwoTiles
     public void SwapTwoTiles(TilePair tilePair)
     {
         _tilePair = tilePair;
 
-        Coord srcCoord = GetTileIndexes(_tilePair.tileA);
-        Coord destCoord = GetTileIndexes(_tilePair.tileB);
+        Coord srcCoord = GetTileCoord(_tilePair.tileA);
+        Coord destCoord = GetTileCoord(_tilePair.tileB);
 
-        Debug.Assert(srcCoord.x != -1 && srcCoord.y != -1 && destCoord.x != -1 && destCoord.y != -1);
+        Debug.Assert(
+            srcCoord.x != -1 && srcCoord.y != -1 && destCoord.x != -1 && destCoord.y != -1
+        );
 
         if (AreTwoTilesAdjacent(srcCoord, destCoord))
         {
@@ -69,7 +107,7 @@ public class TileBoardManager : MonoBehaviour
         }
     }
 
-    private Coord GetTileIndexes(Tile tile)
+    public Coord GetTileCoord(Tile tile)
     {
         for (int i = 0; i < _tileBoard.Count; i++)
         {
@@ -116,6 +154,7 @@ public class TileBoardManager : MonoBehaviour
 
     private void InitializeMatchedTileBoard()
     {
+        _matchedTileResultList.Clear();
         _isMatchedTile.Clear();
         for (int i = 0; i < _tileBoard.Count; i++)
         {
@@ -129,7 +168,6 @@ public class TileBoardManager : MonoBehaviour
 
     private void FindMatchedTilesOnCoord(Coord coord)
     {
-
         foreach (Coord direction in _directionList)
         {
             _foundMatchedTiles.Clear();
@@ -199,18 +237,28 @@ public class TileBoardManager : MonoBehaviour
     {
         return _matchedTileResultList;
     }
+
 #endregion Resolve3Match
 
 #region PopAllMatchedTile
 
     public void DestroyAllMatchedTile()
     {
-        foreach(Tile tile in _matchedTileResultList)
+        foreach (Tile tile in _matchedTileResultList)
         {
-            Coord coord = GetTileIndexes(tile);
-            SetTileToNullTile(coord);
-            GameObject.Destroy(tile.gameObject);
+            Coord coord = GetTileCoord(tile);
+            if (IsOutOfRangeCoordInTileBoard(coord) == false)
+            {
+                DestroyTileInCoord(coord);
+            }
         }
+    }
+
+    private void DestroyTileInCoord(Coord coord)
+    {
+        Tile tile = _tileBoard[coord.y][coord.x];
+        SetTileToNullTile(coord);
+        GameObject.Destroy(tile.gameObject);
     }
 
     private void SetTileToNullTile(Coord coord)
@@ -223,15 +271,87 @@ public class TileBoardManager : MonoBehaviour
     }
 
 #endregion PopAllMatchedTile
+
+#region FillTileBoard
+
+    public void MoveTileToBottom()
+    {
+        // swap tile to lowest bottom null tile.
+        for (int y = _tileBoard[_tileBoard.Count - 1].Count - 1; y >= 0; y--)
         {
-            for (int j = 0; j < _tileBoard[i].Count; j++)
+            for (int x = 0; x < _tileBoard[y].Count; x++)
             {
-                UnityEngine.Debug.Log($"{i} {j} {_tileBoard[i][j] == null}");
+                Coord tileCoord = new(x, y);
+                if (IsNullTileCoord(tileCoord))
+                {
+                    continue;
+                }
+
+                Coord lowestNullTileCoord = FindLowestNullTileCoordFromTileCoord(tileCoord);
+                SwapTileInTileBoard(tileCoord, lowestNullTileCoord);
             }
         }
     }
 
-#endregion PopAllMatchedTile
+    private Coord FindLowestNullTileCoordFromTileCoord(Coord tileCoord)
+    {
+        while (true)
+        {
+            tileCoord.y++;
+            if (IsOutOfRangeCoordInTileBoard(tileCoord) || IsNotNullTileCoord(tileCoord))
+            {
+                tileCoord.y -= 1;
+                break;
+            }
+        }
 
-    public void ResetTileBoard() { }
+        return tileCoord;
+    }
+
+    private bool IsNotNullTileCoord(Coord coord)
+    {
+        return _tileBoard[coord.y][coord.x] != _nullTile;
+    }
+
+    private bool IsNullTileCoord(Coord coord)
+    {
+        return _tileBoard[coord.y][coord.x] == _nullTile;
+    }
+
+    public bool IsNullTile(Tile tile)
+    {
+        return tile == _nullTile;
+    }
+
+    public void CreateNewTilesOnNullTiles()
+    {
+        for (Coord coord = new(0, 0); coord.y < _tileBoard.Count; coord.y++)
+        {
+            for (coord.x = 0; coord.x < _tileBoard[coord.y].Count; coord.x++)
+            {
+                if (IsNullTileCoord(coord))
+                {
+                    GameObject newTileObject = _tileBoardFactory.CreateRandomTileObject();
+                    Tile newTile = newTileObject.GetComponent<Tile>();
+                    _tileBoard[coord.y][coord.x] = newTile;
+                }
+            }
+        }
+    }
+
+    public TileBoard CreateTileBoardSnapshot()
+    {
+        TileBoard tileBoard = new();
+        for (int i = 0; i < _tileBoard.Count; i++)
+        {
+            tileBoard.Add(new());
+            for (int j = 0; j < _tileBoard[i].Count; j++)
+            {
+                tileBoard[i].Add(_tileBoard[i][j]);
+            }
+        }
+        return tileBoard;
+    }
+
+#endregion FillTileBoard
 }

@@ -25,6 +25,10 @@ namespace Assets.Scripts.GameManagerStates
             OnBeforeRunTask();
             if (IsTaskQueueNotEmpty())
             {
+                if (IsNotCurrentTaskInitialized())
+                {
+                    InitializeCurrentTask();
+                }
                 RunCurrentTask();
             }
             else
@@ -35,6 +39,18 @@ namespace Assets.Scripts.GameManagerStates
         }
 
         public virtual void OnBeforeRunTask() { }
+
+        private bool IsNotCurrentTaskInitialized()
+        {
+            return _taskQueue.Peek().IsInitialized == false;
+        }
+
+        private void InitializeCurrentTask()
+        {
+            GameManagerTask task = _taskQueue.Peek();
+            task.InitializeTask();
+            task.IsInitialized = true;
+        }
 
         public virtual void RunCurrentTask()
         {

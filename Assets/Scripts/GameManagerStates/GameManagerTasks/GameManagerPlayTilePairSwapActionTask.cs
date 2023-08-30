@@ -12,7 +12,10 @@ namespace Assets.Scripts.GameManagerStates.GameManagerTasks
             : base(gameManagerState) 
         {
             _tilePair = tilePair;
+        }
 
+        public override void InitializeTask()
+        {
             Vector3 midPoint = Vector3.Lerp(
                 _tilePair.tileA.transform.position,
                 _tilePair.tileB.transform.position,

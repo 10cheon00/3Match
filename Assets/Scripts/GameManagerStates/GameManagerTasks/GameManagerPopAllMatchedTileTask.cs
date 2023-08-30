@@ -6,18 +6,14 @@ namespace Assets.Scripts.GameManagerStates.GameManagerTasks
 {
     public class GameManagerPopAllMatchedTileTask : GameManagerTask
     {
-        private MatchedTileList _matchedTileList;
         private TileBoardManager _tileBoardManager;
 
         public GameManagerPopAllMatchedTileTask(
             GameManagerState gameManagerState,
-            TileBoardManager tileBoardManager,
-            MatchedTileList matchedTileList
+            TileBoardManager tileBoardManager
         ) : base(gameManagerState)
         {
-            _matchedTileList = matchedTileList;
-            _tileBoardManager = tileBoardManager;
-            
+            _tileBoardManager = tileBoardManager;            
         }
 
         public override void RunTask() 

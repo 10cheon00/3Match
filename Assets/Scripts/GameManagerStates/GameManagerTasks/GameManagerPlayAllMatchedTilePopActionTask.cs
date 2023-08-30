@@ -14,7 +14,10 @@ namespace Assets.Scripts.GameManagerStates.GameManagerTasks
         ) : base(gameManagerState)
         {
             _matchedTileList = matchedTileList;
+        }
 
+        public override void InitializeTask()
+        {
             foreach(Tile tile in _matchedTileList)
             {
                 if (tile.IsReadyToPlayTileAction())

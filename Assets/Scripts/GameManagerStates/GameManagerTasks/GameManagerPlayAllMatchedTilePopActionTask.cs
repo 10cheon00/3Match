@@ -17,7 +17,10 @@ namespace Assets.Scripts.GameManagerStates.GameManagerTasks
 
             foreach(Tile tile in _matchedTileList)
             {
-                tile.PlayPopAction();
+                if (tile.IsReadyToPlayTileAction())
+                {
+                    tile.PlayPopAction();
+                }
             }
         }
 

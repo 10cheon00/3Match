@@ -16,6 +16,11 @@ namespace Assets.Scripts.TileActions
         public TilePopAction(Tile tile, Material flashMaterial, GameObject popParticleEffectPrefab)
             : base(tile)
         {
+            if (tile.IsReadyToPlayTileAction() == false)
+            {
+                return;
+            }
+
             _flashMaterial = flashMaterial;
             _popParticleEffectObject = GameObject.Instantiate(
                 popParticleEffectPrefab,
@@ -28,10 +33,7 @@ namespace Assets.Scripts.TileActions
             _originalTileMaterial = tile.SpriteRenderer.material;
             _isPopParticleEffectRunning = false;
 
-            if (tile.IsReadyToPlayTileAction())
-            {
-                tile.StartCoroutine(PlayFlashEffect());
-            }
+            tile.StartCoroutine(PlayFlashEffect());
         }
 
 
@@ -87,8 +89,6 @@ namespace Assets.Scripts.TileActions
 
         protected override void Stop()
         {
-            ChangeMaterialToOriginalTileMaterial();
-            GameObject.Destroy(_popParticleEffectObject);
             ChangeAction(new TileReadyAction(tile));
         }
     }

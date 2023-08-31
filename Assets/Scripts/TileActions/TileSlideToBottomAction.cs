@@ -5,6 +5,7 @@ namespace Assets.Scripts.TileActions
     public class TileSlideToBottomAction : TileAction
     {
         private Vector3 _to;
+        private float _speed = 5f;
         public TileSlideToBottomAction(Tile tile, Vector3 from, Vector3 to) : base(tile) 
         {
             tile.transform.position = from;
@@ -13,8 +14,8 @@ namespace Assets.Scripts.TileActions
 
         public override void Play() 
         {
-            tile.transform.position = Vector3.Lerp(tile.transform.position, _to, Time.deltaTime);
-            if ((tile.transform.position - _to).sqrMagnitude < 0.1f)
+            tile.transform.position += Vector3.down * _speed * Time.deltaTime;
+            if ((tile.transform.position - _to).sqrMagnitude < 0.01f)
             {
                 Stop();
             }
